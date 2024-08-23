@@ -1,3 +1,8 @@
+const deviceSizes = {
+  mobile: 450,
+  tablet: 1024,
+};
+
 export const Theme = {
   colors: {
     WHITE: "#FFFFFF",
@@ -24,5 +29,9 @@ export const Theme = {
     SubR200: "#FFCCC9",
     SubR100: "#FFE4E3",
     SubR50: "#FFF4F3",
+  },
+  device: {
+    mobile: `screen and (max-width: ${deviceSizes.mobile}px)`,
+    tablet: `screen and (max-width: ${deviceSizes.tablet}px)`,
   },
 };
