@@ -41,8 +41,8 @@ const DetailBtn = ({ isRecruiting }) => {
 export default DetailBtn;
 
 const Container = styled.div`
-  width: 306px;
-  height: 147px;
+  width: 350px;
+  height: 191px;
   border-radius: 14px;
   border: 1px solid #e7e7e7;
   padding: 23px 21px 19px 21px;
@@ -124,11 +124,15 @@ const GoDetailButton = styled.button`
 
 const Content = styled.div`
   width: 295px;
-  height: 60px;
+  height: auto;
   font-size: 16px;
   font-weight: 500;
-  overflow: hidden;
-  text-overflow: ellipsis;
   margin-top: 11px;
   color: ${({ theme }) => theme.colors.Neutral500};
+  line-height: 19px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 `;

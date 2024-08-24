@@ -22,8 +22,8 @@ const Header = () => {
 export default Header;
 
 const Container = styled.div`
-  width: calc(100%-19%);
-  height: 69px;
+  width: 100%;
+  height: 105px;
   padding: 18px 19%;
   border-bottom: 1px solid #e7e7e7;
   box-shadow: 0 2px 4px 0 rgba(00, 00, 00, 0.1);
