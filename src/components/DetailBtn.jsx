@@ -1,20 +1,50 @@
 import React from "react";
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
-
 import { ReactComponent as GreenCircle } from "../assets/images/StateCircleGreen.svg";
 import { ReactComponent as RedCircle } from "../assets/images/StateCircleRed.svg";
+import JoinLogo from "../assets/images/JoinLogo.svg";
 
-const DetailBtn = ({ isRecruiting }) => {
+const DetailBtn = ({ data }) => {
+  const { categoryName, id, recruitmentStatus, image, name, introduce } = data;
   const navigate = useNavigate();
+
+  const isRecruiting = recruitmentStatus === "Recruiting";
+  const getCategoryNameInKorean = (categoryName) => {
+    switch (categoryName) {
+      case "sports":
+        return "스포츠분과";
+      case "service":
+        return "봉사분과";
+      case "science":
+        return "과학분과";
+      case "behavior":
+        return "언행예술분과";
+      case "religion":
+        return "종교분과";
+      case "flatar":
+        return "평면예술분과";
+      case "society":
+        return "사회분과";
+      default:
+        return "기타분과";
+    }
+  };
+
+  const categoryNameKorean = getCategoryNameInKorean(categoryName);
+
   const handleGoDetail = () => {
-    navigate("/:id");
+    navigate(`${categoryName}/${id}`);
   };
   return (
     <>
       <Container onClick={handleGoDetail}>
         <Top>
-          <Logo />
+          {image && image.imageLink ? (
+            <Logo src={image.imageLink} />
+          ) : (
+            <Logo src={JoinLogo} />
+          )}
           <TitleBtnBox>
             <TitleBox>
               {isRecruiting ? (
@@ -28,17 +58,13 @@ const DetailBtn = ({ isRecruiting }) => {
                   모집 마감
                 </State>
               )}
-              <Name>포토랩</Name>
-              <Type>평면예술분과</Type>
+              <Name>{name}</Name>
+              <Type>{categoryNameKorean}</Type>
             </TitleBox>
             <GoDetailButton>자세히 보기</GoDetailButton>
           </TitleBtnBox>
         </Top>
-        <Content>
-          안녕하세요 동아리 설명입니다. 안녕하세요 동아리 설명입니다. 안녕하세요
-          동아리 설명입니다. 안녕하세요 동아리 설명입니다. 안녕하세요 동아리
-          설명입니다.
-        </Content>
+        <Content>{introduce}</Content>
       </Container>
     </>
   );
@@ -103,13 +129,13 @@ const State = styled.div`
 `;
 
 const Name = styled.div`
-  width: 74px;
+  width: auto;
   height: 35px;
   font-size: 22px;
   font-weight: 600;
   display: flex;
   align-items: center;
-  justify-content: center;
+  margin-left: 8px;
 `;
 
 const Type = styled.div`

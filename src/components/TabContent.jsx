@@ -70,8 +70,6 @@ const TabContent = () => {
     introduce,
     activity,
   } = Data.data.club;
-  // const startDate = apply.recruitStartDate;
-  console.log(Data.data.club);
   const startDate = moment(apply.recruitStartDate).format("YYYY.MM.DD");
   const endDate = moment(apply.recruitEndDate).format("MM.DD");
   const formedDate = `${startDate} - ${endDate}`;
@@ -145,6 +143,7 @@ const Header = styled.div`
   height: 79px;
   box-shadow: 0 2px 4px 0 rgba(00, 00, 00, 0.1);
   display: flex;
+  justify-content: center;
   align-items: center;
   padding: 18px 0 20px 0;
   @media ${({ theme }) => theme.device.tablet} {

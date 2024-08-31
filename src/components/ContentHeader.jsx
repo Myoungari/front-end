@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
 import TabBar from "./TabBar";
 
-const ContentHeader = () => {
+const ContentHeader = ({ length }) => {
   const datas = [
     { name: "전체", url: "/" },
     { name: "평면예술분과", url: "/flatart" },
@@ -16,7 +16,7 @@ const ContentHeader = () => {
     <HeaderWrapper>
       <TotalBox>
         <TotalBlack>명지대학교 자연 캠퍼스에는</TotalBlack>
-        <TotalBlue>58</TotalBlue>
+        <TotalBlue>{length}</TotalBlue>
         <TotalBlack>개의 동아리가 있어요!</TotalBlack>
       </TotalBox>
       <TabBar data={datas} />
