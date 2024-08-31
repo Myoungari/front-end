@@ -21,6 +21,14 @@ const Container = styled.div`
   border-radius: 30px;
   padding: 15px 44px;
   margin: 33px 0 39px;
+
+  @media screen and (max-width: 608px) {
+    width: calc(100% - 40px);
+  }
+  @media ${({ theme }) => theme.device.mobile} {
+    width: 353px;
+    height: 48px;
+  }
 `;
 
 const Input = styled.input`
@@ -30,6 +38,7 @@ const Input = styled.input`
   font-weight: 600;
   border: none;
   margin-right: 5px;
+  line-height: 54px;
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.Neutral200};

@@ -1,12 +1,18 @@
 import React from "react";
 import { styled } from "styled-components";
+import { useNavigate } from "react-router-dom";
+
 import { ReactComponent as GreenCircle } from "../assets/images/StateCircleGreen.svg";
 import { ReactComponent as RedCircle } from "../assets/images/StateCircleRed.svg";
 
 const DetailBtn = ({ isRecruiting }) => {
+  const navigate = useNavigate();
+  const handleGoDetail = () => {
+    navigate("/:id");
+  };
   return (
     <>
-      <Container>
+      <Container onClick={handleGoDetail}>
         <Top>
           <Logo />
           <TitleBtnBox>
@@ -47,6 +53,11 @@ const Container = styled.div`
   border: 1px solid #e7e7e7;
   padding: 23px 21px 19px 21px;
   box-shadow: 0 0 10px 0 rgba(00, 00, 00, 0.1);
+  &:hover {
+    border: 1px solid ${({ theme }) => theme.colors.Primary100};
+    box-shadow: 0 0 10px 0 rgba(00, 83, 226, 0.1);
+    background-color: ${({ theme }) => theme.colors.Primary50};
+  }
 `;
 
 const Logo = styled.img`
