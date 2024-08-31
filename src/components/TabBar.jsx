@@ -39,6 +39,7 @@ const Container = styled.div`
   display: flex;
   gap: 7px;
   justify-content: center;
+  overflow-x: auto;
 
   @media screen and (max-width: 990px) {
     padding: 0 10px;

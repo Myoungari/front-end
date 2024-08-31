@@ -27,6 +27,7 @@ const ContentHeader = () => {
 export default ContentHeader;
 
 const HeaderWrapper = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
