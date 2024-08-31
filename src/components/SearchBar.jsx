@@ -21,6 +21,7 @@ const Container = styled.div`
   border-radius: 30px;
   padding: 15px 44px;
   margin: 33px 0 39px;
+  display: flex;
 
   @media screen and (max-width: 608px) {
     width: calc(100% - 40px);

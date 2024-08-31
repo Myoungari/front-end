@@ -133,7 +133,6 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  border: 1px solid red;
   margin-top: 25px;
 
   @media ${({ theme }) => theme.device.mobile} {
