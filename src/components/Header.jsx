@@ -30,7 +30,6 @@ const Container = styled.div`
 
   @media ${({ theme }) => theme.device.mobile} {
     padding: 18px 21px;
-    border-bottom: 1px solid tomato;
   }
 `;
 
