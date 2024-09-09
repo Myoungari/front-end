@@ -4,7 +4,6 @@ import { Theme } from "./styles/Theme";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 
-import HomeLayout from "./pages/HomeLayout";
 import TabLayout from "./pages/TabLayout";
 import TabContent from "./components/TabContent";
 
@@ -15,11 +14,10 @@ const App = () => {
       <Router>
         <Header />
         <Routes>
-          <Route path="/" element={<HomeLayout />} />
-
-          <Route path="/" element={<TabLayout />}>
-            <Route path="/service" element={<TabContent />}>
-              <Route path="/service/:id" element={<TabContent />} />
+          <Route element={<TabLayout />}>
+            <Route index element={<TabLayout />} />
+            <Route path=":category" element={<TabContent />}>
+              <Route path=":id" element={<TabContent />} />
             </Route>
           </Route>
         </Routes>

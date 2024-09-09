@@ -1,78 +1,34 @@
+import React from "react";
 import { styled } from "styled-components";
 import moment from "moment";
+import { useOutletContext } from "react-router-dom";
+import JoinLogo from "../assets/images/JoinLogo.svg";
+
 const TabContent = () => {
-  const Data = {
-    code: 200,
-    data: {
-      clubNames: [
-        {
-          id: 5,
-          clubName: "KUSA",
-          recruitmentStatus: "Recruiting",
-        },
-        {
-          id: 3,
-          clubName: "M.U.V (무브)",
-          recruitmentStatus: "Recruiting",
-        },
-        {
-          id: 6,
-          clubName: "방울",
-          recruitmentStatus: "Recruiting",
-        },
-        {
-          id: 4,
-          clubName: "아이사랑",
-          recruitmentStatus: "Recruiting",
-        },
-      ],
-      club: {
-        id: 5,
-        name: "KUSA",
-        location: "학관 4층 421호",
-        snsLink: "@mju_kusa_",
-        introduce:
-          "저희 동아리는 타 대학과의 교류 및 연합 활동을 주로 합니다. 활동 시기는 월 1회 정도로 크게 부담되지 않는 선에서 활동을 합니다.\n명지대를 다니고 있지만 다른 대학과의 교류를 원하거나 다양한 사람들 만나보고 싶거나 선배들과 친해지고 싶다면 지금 바로 가입하시면 됩니다^^\n회비는 학기에 2만원입니다~~",
-        activity:
-          "저희 동아리는 타 대학과 연합하는 활동을 주로 합니다 예를 들어 플로깅활동, 문화 탐방활동도 하고 동아리 부원끼리 자체적인 회식을 통해 친목도모도 합니다!\n매달 1회 주말에 타 대학과 연합활동 (시험기간은 제외)",
-        image: {
-          imageLink:
-            "https://myoungari.s3.ap-northeast-2.amazonaws.com/image/71af50f5-3c78-4a69-b85d-4af76bd21ad9.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240829T111504Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=AKIAUPMYM22W56JKKW7R%2F20240829%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Signature=dc82c13f00e5ce1c9895b2de74ab75aec0e2d6ea87a962ff1e531ba35a72597a",
-        },
-        apply: {
-          recruitmentStatus: "Recruiting",
-          applyLink:
-            "https://docs.google.com/forms/d/1zg6xjdadcmSjBfq7VyjDZS_KQzBCS1Ge8lfMCGqJ4zo/edit",
-          recruitStartDate: "2024-09-02",
-          recruitEndDate: "2024-09-15",
-          qualifications:
-            "학년무관/성별무관/여러 사람과 어울리고 싶거나 봉사를 좋아하시는 분",
-        },
-        president: {
-          name: "이창현",
-          contact: "010-4375-4356",
-          email: "changhyeon55@naver.com",
-        },
-        category: {
-          id: 2,
-          name: "service",
-        },
-      },
-    },
-  };
+  const categoryData = useOutletContext();
+  const clubData = categoryData.club;
   const {
     name,
     image,
     president,
     location,
     snsLink,
-    apply,
+    apply = {},
     introduce,
     activity,
-  } = Data.data.club;
-  const startDate = moment(apply.recruitStartDate).format("YYYY.MM.DD");
-  const endDate = moment(apply.recruitEndDate).format("MM.DD");
-  const formedDate = `${startDate} - ${endDate}`;
+  } = clubData;
+
+  const startDate = apply.recruitStartDate
+    ? moment(apply.recruitStartDate).format("YYYY.MM.DD")
+    : "";
+  const endDate = apply.recruitEndDate
+    ? moment(apply.recruitEndDate).format("MM.DD")
+    : "";
+  const formedDate =
+    apply.recruitStartDate && apply.recruitEndDate
+      ? `${startDate} - ${endDate}`
+      : "";
+
   return (
     <>
       <Container>
@@ -84,7 +40,9 @@ const TabContent = () => {
         </Header>
         <ContentArea>
           <ProfileWrapper>
-            <ProfileImg src={image.imageLink}></ProfileImg>
+            <ProfileImg
+              src={image === null ? JoinLogo : image.imageLink}
+            ></ProfileImg>
             <ProfileBox>
               <ProfileLineWrapper>
                 <ProfileKeyText>회장: </ProfileKeyText>

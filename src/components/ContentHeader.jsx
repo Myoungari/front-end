@@ -1,17 +1,6 @@
 import { styled } from "styled-components";
-import TabBar from "./TabBar";
 
 const ContentHeader = ({ length }) => {
-  const datas = [
-    { name: "전체", url: "/" },
-    { name: "평면예술분과", url: "/flatart" },
-    { name: "언행예술분과", url: "/behavior" },
-    { name: "종교분과", url: "/religion" },
-    { name: "과학분과", url: "/science" },
-    { name: "인문사회분과", url: "/society" },
-    { name: "스포츠레저분과", url: "/sports" },
-    { name: "봉사분과", url: "/service" },
-  ];
   return (
     <HeaderWrapper>
       <TotalBox>
@@ -19,7 +8,6 @@ const ContentHeader = ({ length }) => {
         <TotalBlue>{length}</TotalBlue>
         <TotalBlack>개의 동아리가 있어요!</TotalBlack>
       </TotalBox>
-      <TabBar data={datas} />
     </HeaderWrapper>
   );
 };
@@ -49,6 +37,9 @@ const TotalBlack = styled.p`
   @media ${({ theme }) => theme.device.mobile} {
     font-size: 16px;
   }
+  @media screen and (max-width: 400px) {
+    font-size: 14px;
+  }
 `;
 
 const TotalBlue = styled.p`
@@ -61,5 +52,8 @@ const TotalBlue = styled.p`
   }
   @media ${({ theme }) => theme.device.mobile} {
     font-size: 20px;
+  }
+  @media screen and (max-width: 400px) {
+    font-size: 18px;
   }
 `;

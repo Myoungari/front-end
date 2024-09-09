@@ -1,27 +1,42 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import ClubTab from "./ClubTab";
 
 const ClubsTabBar = ({ data }) => {
-  console.log(data.data);
-  const formedData = data.data.clubNames;
-  const categoryType = data.data.club.category.name;
+  const [newData, setNewData] = useState({
+    clubNames: [],
+    club: { category: {} },
+  });
+
+  useEffect(() => {
+    setNewData(data);
+  }, [data]);
+
   const navigate = useNavigate();
   const location = useLocation();
+
   return (
     <Wrapper>
       <Container>
-        {formedData.map((data, index) => (
-          <ClubTab
-            isActive={location.pathname === "/:" + data.id}
-            $recruiteState={data.recruitmentStatus}
-            onClick={() => navigate(`/${categoryType}/${data.id}`)}
-            key={index}
-          >
-            {data.clubName}
-          </ClubTab>
-        ))}
+        {newData.clubNames &&
+          newData.clubNames.map((club, index) => {
+            const isActive = location.pathname.split("/")[2] == club.id;
+            console.log(isActive);
+            console.log(location.pathname.split("/")[2]);
+            return (
+              <ClubTab
+                isActive={isActive}
+                $recruiteState={club.recruitmentStatus}
+                onClick={() =>
+                  navigate(`/${newData.club.category.name}/${club.id}`)
+                }
+                key={index}
+              >
+                {club.clubName}
+              </ClubTab>
+            );
+          })}
       </Container>
     </Wrapper>
   );
@@ -34,7 +49,7 @@ const Wrapper = styled.div`
   overflow-x: auto;
   display: flex;
   justify-content: center;
-  &scroll::-webkit-scrollbar {
+  &::-webkit-scrollbar {
     display: none;
   }
 `;
@@ -49,7 +64,7 @@ const Container = styled.div`
     padding: 0 10px;
     overflow-x: scroll;
     justify-content: flex-start;
-    &scroll::-webkit-scrollbar {
+    &::-webkit-scrollbar {
       display: none;
     }
   }

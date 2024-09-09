@@ -22,12 +22,12 @@ const DetailBtn = ({ data }) => {
         return "언행예술분과";
       case "religion":
         return "종교분과";
-      case "flatar":
+      case "flatart":
         return "평면예술분과";
       case "society":
         return "사회분과";
       default:
-        return "기타분과";
+        return "error";
     }
   };
 
@@ -36,6 +36,7 @@ const DetailBtn = ({ data }) => {
   const handleGoDetail = () => {
     navigate(`${categoryName}/${id}`);
   };
+
   return (
     <>
       <Container onClick={handleGoDetail}>
