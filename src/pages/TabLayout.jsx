@@ -131,7 +131,7 @@ const TabLayout = () => {
   );
 
   if (isLoading) {
-    return <div>로딩 중...</div>;
+    return;
   }
 
   return (
@@ -145,7 +145,6 @@ const TabLayout = () => {
 
 export default TabLayout;
 
-// Styled components는 이전과 동일합니다.
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
