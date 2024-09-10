@@ -26,8 +26,10 @@ const Container = styled.div`
   height: 105px;
   padding: 18px 19%;
   border-bottom: 1px solid #e7e7e7;
+  background-color: ${({ theme }) => theme.colors.WHITE};
   box-shadow: 0 2px 4px 0 rgba(00, 00, 00, 0.1);
-
+  position: fixed;
+  top: 0;
   @media ${({ theme }) => theme.device.mobile} {
     height: 75px;
     padding: 18px 21px;

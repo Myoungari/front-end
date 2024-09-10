@@ -106,7 +106,7 @@ const TabLayout = () => {
   );
 
   const renderCategoryContent = () => (
-    <>
+    <Container>
       <ContentHeader length={"26"} />
       <TabBar onTabClick={handleTabClick} categoryData={categoryData} />
       <ClubsTabBar
@@ -115,20 +115,22 @@ const TabLayout = () => {
         onClubSelect={handleClubSelect}
       />
       <Outlet context={categoryData} />
-    </>
+    </Container>
   );
 
   const renderMainContent = () => (
-    <Wrapper>
-      <ContentHeader length={"26"} />
-      <TabBar onTabClick={handleTabClick} />
-      <SearchBar />
-      <BtnArea>
-        {mainData.map((item, index) => (
-          <DetailBtn data={item} key={index} />
-        ))}
-      </BtnArea>
-    </Wrapper>
+    <Container>
+      <Wrapper>
+        <ContentHeader length={"26"} />
+        <TabBar onTabClick={handleTabClick} />
+        <SearchBar />
+        <BtnArea>
+          {mainData.map((item, index) => (
+            <DetailBtn data={item} key={index} />
+          ))}
+        </BtnArea>
+      </Wrapper>
+    </Container>
   );
 
   if (isLoading) {
@@ -150,7 +152,13 @@ const TabLayout = () => {
 
 export default TabLayout;
 
-// Styled components는 이전과 동일합니다.
+const Container = styled.div`
+  margin-top: 105px;
+  @media ${({ theme }) => theme.device.mobile} {
+    margin-top: 75px;
+  }
+`;
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
