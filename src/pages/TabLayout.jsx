@@ -97,7 +97,7 @@ const TabLayout = () => {
           setSelectedId(clubId);
           navigate(`/${category}/${clubId}`);
         } catch (error) {
-          console.error("클럽 데이터 가져오기 오류:", error);
+          console.error("클럽 데이터 가져오기 오류: ", error);
         }
       }
     },
