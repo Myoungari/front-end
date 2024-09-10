@@ -67,7 +67,7 @@ const TabLayout = () => {
         setCategoryData(categoryResponse);
       }
     } catch (error) {
-      console.error("카테고리 데이터 가져오기 오류:", error);
+      console.error("카테고리 데이터 가져오기 오류: ", error);
     } finally {
       setIsLoading(false);
     }
