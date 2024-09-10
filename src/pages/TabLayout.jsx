@@ -4,7 +4,7 @@ import styled from "styled-components";
 import ContentHeader from "../components/ContentHeader";
 import ClubsTabBar from "../components/ClubsTabBar";
 import TabBar from "../components/TabBar";
-import SearchBar from "../components/SearchBar";
+// import SearchBar from "../components/SearchBar";
 import DetailBtn from "../components/DetailBtn";
 import {
   AxiosCategoryGet,
