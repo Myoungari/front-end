@@ -11,6 +11,7 @@ import {
   AxiosMainGet,
   AxiosCategoryNDetailGet,
 } from "../api/AxiosMain";
+import Loading from "../components/Loading";
 
 const TabLayout = () => {
   const navigate = useNavigate();
@@ -131,7 +132,11 @@ const TabLayout = () => {
   );
 
   if (isLoading) {
-    return <div>로딩 중...</div>;
+    return (
+      <>
+        <Loading />
+      </>
+    );
   }
 
   return (

@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import moment from "moment";
 import { useOutletContext } from "react-router-dom";
 import JoinLogo from "../assets/images/JoinLogo.svg";
-
+import Loading from "./Loading";
 const TabContent = () => {
   const categoryData = useOutletContext();
   const [clubData, setClubData] = useState(null);
@@ -17,7 +17,11 @@ const TabContent = () => {
   }, [categoryData]);
 
   if (isLoading) {
-    return <>로딩 중...</>;
+    return (
+      <>
+        <Loading />
+      </>
+    );
   }
 
   const {
