@@ -1,1 +1,9 @@
 @import url("https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css");
+
+@font-face {
+  font-family: "Katuri";
+  src: url("https://gcore.jsdelivr.net/gh/projectnoonnu/noonfonts_13@1.0/Katuri.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
