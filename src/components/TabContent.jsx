@@ -292,16 +292,16 @@ const ContentBox = styled.div`
   border-radius: 12px;
   font-weight: 400;
   font-size: 18px;
-  line-height: 20px;
+  line-height: 24px;
   @media ${({ theme }) => theme.device.tablet} {
     width: 594px;
     font-size: 16px;
-    line-height: 19px;
+    line-height: 22px;
   }
   @media screen and (max-width: 600px) {
     width: auto;
     max-width: 450px;
     font-size: 14px;
-    line-height: 17px;
+    line-height: 20px;
   }
 `;
