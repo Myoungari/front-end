@@ -41,12 +41,14 @@ export default Footer;
 
 const Container = styled.div`
   width: 100%;
-  height: 177px;
+  height: 200px;
   background-color: ${({ theme }) => theme.colors.Neutral600};
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 74px;
+  margin-top: 100px;
+  position: relative;
+  bottom: 0;
 `;
 
 const Wrapper = styled.div`
