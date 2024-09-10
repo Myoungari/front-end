@@ -29,6 +29,7 @@ const Container = styled.div`
   box-shadow: 0 2px 4px 0 rgba(00, 00, 00, 0.1);
 
   @media ${({ theme }) => theme.device.mobile} {
+    height: 75px;
     padding: 18px 21px;
   }
 `;
