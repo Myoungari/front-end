@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
 import moment from "moment";
 import { useOutletContext } from "react-router-dom";
@@ -6,7 +6,20 @@ import JoinLogo from "../assets/images/JoinLogo.svg";
 
 const TabContent = () => {
   const categoryData = useOutletContext();
-  const clubData = categoryData?.club;
+  const [clubData, setClubData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (categoryData?.club) {
+      setClubData(categoryData.club);
+      setIsLoading(false);
+    }
+  }, [categoryData]);
+
+  if (isLoading) {
+    return <>로딩 중...</>;
+  }
+
   const {
     name,
     image,
@@ -29,20 +42,23 @@ const TabContent = () => {
       ? `${startDate} - ${endDate}`
       : "";
 
+  const goApplyLink = () =>
+    apply.applyLink
+      ? (window.location.href = apply.applyLink)
+      : alert("지원링크가 존재하지 않습니다 ㅠ.ㅠ");
+
   return (
     <>
       <Container>
         <Header>
           <HeaderContainer>
             <ClubName>{name}</ClubName>
-            <ApplyBtn>지원하기</ApplyBtn>
+            <ApplyBtn onClick={goApplyLink}>지원하기</ApplyBtn>
           </HeaderContainer>
         </Header>
         <ContentArea>
           <ProfileWrapper>
-            <ProfileImg
-              src={image === null ? JoinLogo : image.imageLink}
-            ></ProfileImg>
+            <ProfileImg src={image?.imageLink || JoinLogo}></ProfileImg>
             <ProfileBox>
               <ProfileLineWrapper>
                 <ProfileKeyText>회장: </ProfileKeyText>
