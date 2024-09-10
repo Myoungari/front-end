@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import ClubTab from "./ClubTab";
+import { AxiosCategoryNDetailGet } from "../api/AxiosMain";
 
-const ClubsTabBar = ({ data }) => {
+const ClubsTabBar = ({ data, $selectedId, $setSelectedId }) => {
   const [newData, setNewData] = useState({
     clubNames: [],
     club: { category: {} },
@@ -13,6 +14,24 @@ const ClubsTabBar = ({ data }) => {
     setNewData(data);
   }, [data]);
 
+  useEffect(() => {
+    if (newData.club.category.name && $selectedId) {
+      fetchData();
+    }
+  }, [$selectedId, newData.club.category.name]);
+
+  const fetchData = async () => {
+    try {
+      const response = await AxiosCategoryNDetailGet(
+        newData.club.category.name,
+        $selectedId
+      );
+      console.log(response);
+    } catch (error) {
+      console.error("Error fetching category data:", error);
+    }
+  };
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -21,16 +40,16 @@ const ClubsTabBar = ({ data }) => {
       <Container>
         {newData.clubNames &&
           newData.clubNames.map((club, index) => {
-            const isActive = location.pathname.split("/")[2] == club.id;
-            console.log(isActive);
-            console.log(location.pathname.split("/")[2]);
+            const handleTabClick = () => {
+              navigate(`/${newData.club.category.name}/${club.id}`);
+              $setSelectedId(club.id);
+            };
+            const isActive = $selectedId === club.id;
             return (
               <ClubTab
                 isActive={isActive}
                 $recruiteState={club.recruitmentStatus}
-                onClick={() =>
-                  navigate(`/${newData.club.category.name}/${club.id}`)
-                }
+                onClick={() => handleTabClick()}
                 key={index}
               >
                 {club.clubName}

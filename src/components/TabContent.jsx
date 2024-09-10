@@ -6,7 +6,7 @@ import JoinLogo from "../assets/images/JoinLogo.svg";
 
 const TabContent = () => {
   const categoryData = useOutletContext();
-  const clubData = categoryData.club;
+  const clubData = categoryData?.club;
   const {
     name,
     image,

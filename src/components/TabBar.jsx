@@ -15,7 +15,6 @@ const TabBar = ({ onTabClick, categoryData }) => {
     { name: "봉사분과", url: "/service" },
   ];
 
-  const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -28,7 +27,6 @@ const TabBar = ({ onTabClick, categoryData }) => {
   const handleTabClick = (tabData) => {
     const clubId = categoryData?.club?.id;
     onTabClick(tabData.url, clubId);
-    console.log(clubId);
   };
 
   return (

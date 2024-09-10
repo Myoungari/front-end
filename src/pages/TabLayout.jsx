@@ -17,6 +17,8 @@ const TabLayout = () => {
     club: { category: {} },
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [idList, setIdList] = useState([]);
+  const [selectedId, setSelectedId] = useState(null);
 
   useEffect(() => {
     setIsLoading(true);
@@ -37,15 +39,21 @@ const TabLayout = () => {
       setIsLoading(false);
     }
   };
+
   const fetchCategoryData = async (url) => {
     if (url === "/") return;
 
     const baseUrl = url.split("/")[1];
-    console.log(baseUrl);
 
     try {
       const response = await AxiosCategoryGet(baseUrl);
       setCategoryData(response);
+      const newIdList = response.clubNames.map((club) => club.id);
+      setIdList(newIdList);
+
+      if (!selectedId || !newIdList.includes(selectedId)) {
+        setSelectedId(newIdList[0]);
+      }
     } catch (error) {
       console.error("Error fetching category data:", error);
     } finally {
@@ -54,8 +62,8 @@ const TabLayout = () => {
   };
 
   const handleTabClick = useCallback(
-    (url, clubId) => {
-      const navigateUrl = clubId ? `${url}/${clubId}` : url;
+    (url) => {
+      const navigateUrl = url !== "/" ? `${url}` : "/";
       navigate(navigateUrl);
     },
     [navigate]
@@ -64,14 +72,16 @@ const TabLayout = () => {
   const renderCategoryContent = () => (
     <>
       <ContentHeader length={"26"} />
-      <TabBar
-        onTabClick={handleTabClick}
-        categoryData={categoryData} // TabBar에 categoryData 전달
+      <TabBar onTabClick={handleTabClick} categoryData={categoryData} />
+      <ClubsTabBar
+        data={categoryData}
+        $selectedId={selectedId}
+        $setSelectedId={setSelectedId}
       />
-      <ClubsTabBar data={categoryData} />
       <Outlet context={categoryData} />
     </>
   );
+
   const renderMainContent = () => (
     <Wrapper>
       <ContentHeader length={"26"} />
