@@ -123,7 +123,7 @@ const TabLayout = () => {
       <Wrapper>
         <ContentHeader length={"26"} />
         <TabBar onTabClick={handleTabClick} />
-        <SearchBar />
+        {/* <SearchBar /> */}
         <BtnArea>
           {mainData.map((item, index) => (
             <DetailBtn data={item} key={index} />
