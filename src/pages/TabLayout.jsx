@@ -171,6 +171,7 @@ const BtnArea = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 28px 35px;
+  margin-top: 35px;
   @media screen and (max-width: 1150px) {
     width: 736px;
   }
