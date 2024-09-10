@@ -6,7 +6,11 @@ import ClubsTabBar from "../components/ClubsTabBar";
 import TabBar from "../components/TabBar";
 import SearchBar from "../components/SearchBar";
 import DetailBtn from "../components/DetailBtn";
-import { AxiosCategoryGet, AxiosMainGet } from "../api/AxiosMain";
+import {
+  AxiosCategoryGet,
+  AxiosMainGet,
+  AxiosCategoryNDetailGet,
+} from "../api/AxiosMain";
 
 const TabLayout = () => {
   const navigate = useNavigate();
@@ -17,7 +21,6 @@ const TabLayout = () => {
     club: { category: {} },
   });
   const [isLoading, setIsLoading] = useState(true);
-  const [idList, setIdList] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
 
   useEffect(() => {
@@ -34,7 +37,7 @@ const TabLayout = () => {
       const response = await AxiosMainGet();
       setMainData(response.data.content);
     } catch (error) {
-      console.error("Error fetching main data:", error);
+      console.error("메인 데이터 가져오기 오류:", error);
     } finally {
       setIsLoading(false);
     }
@@ -43,19 +46,28 @@ const TabLayout = () => {
   const fetchCategoryData = async (url) => {
     if (url === "/") return;
 
-    const baseUrl = url.split("/")[1];
+    const category = url.split("/")[1];
+    const clubId = url.split("/")[2];
 
     try {
-      const response = await AxiosCategoryGet(baseUrl);
-      setCategoryData(response);
-      const newIdList = response.clubNames.map((club) => club.id);
-      setIdList(newIdList);
+      const categoryResponse = await AxiosCategoryGet(category);
+      const newSelectedId = clubId || categoryResponse.clubNames[0]?.id;
 
-      if (!selectedId || !newIdList.includes(selectedId)) {
-        setSelectedId(newIdList[0]);
+      if (newSelectedId) {
+        const detailResponse = await AxiosCategoryNDetailGet(
+          category,
+          newSelectedId
+        );
+        setCategoryData({
+          ...categoryResponse,
+          club: detailResponse.club,
+        });
+        setSelectedId(newSelectedId);
+      } else {
+        setCategoryData(categoryResponse);
       }
     } catch (error) {
-      console.error("Error fetching category data:", error);
+      console.error("카테고리 데이터 가져오기 오류:", error);
     } finally {
       setIsLoading(false);
     }
@@ -69,14 +81,37 @@ const TabLayout = () => {
     [navigate]
   );
 
+  const handleClubSelect = useCallback(
+    async (clubId) => {
+      if (selectedId !== clubId) {
+        const category = location.pathname.split("/")[1];
+        try {
+          const detailResponse = await AxiosCategoryNDetailGet(
+            category,
+            clubId
+          );
+          setCategoryData((prevData) => ({
+            ...prevData,
+            club: detailResponse.club,
+          }));
+          setSelectedId(clubId);
+          navigate(`/${category}/${clubId}`);
+        } catch (error) {
+          console.error("클럽 데이터 가져오기 오류:", error);
+        }
+      }
+    },
+    [location.pathname, navigate, selectedId]
+  );
+
   const renderCategoryContent = () => (
     <>
       <ContentHeader length={"26"} />
       <TabBar onTabClick={handleTabClick} categoryData={categoryData} />
       <ClubsTabBar
         data={categoryData}
-        $selectedId={selectedId}
-        $setSelectedId={setSelectedId}
+        selectedId={selectedId}
+        onClubSelect={handleClubSelect}
       />
       <Outlet context={categoryData} />
     </>
@@ -96,7 +131,7 @@ const TabLayout = () => {
   );
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>로딩 중...</div>;
   }
 
   return (
@@ -110,11 +145,13 @@ const TabLayout = () => {
 
 export default TabLayout;
 
+// Styled components는 이전과 동일합니다.
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
+
 const BtnArea = styled.div`
   width: 1122px;
   height: auto;
