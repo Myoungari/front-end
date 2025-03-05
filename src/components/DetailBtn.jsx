@@ -6,7 +6,8 @@ import { ReactComponent as RedCircle } from "../assets/images/StateCircleRed.svg
 import JoinLogo from "../assets/images/JoinLogo.svg";
 
 const DetailBtn = ({ data }) => {
-  const { categoryName, id, recruitmentStatus, image, name, introduce } = data;
+  const { categoryName, id, recruitmentStatus, thumbnailUrl, name, introduce } =
+    data;
   const navigate = useNavigate();
 
   const isRecruiting = recruitmentStatus === "Recruiting";
@@ -41,11 +42,7 @@ const DetailBtn = ({ data }) => {
     <>
       <Container onClick={handleGoDetail}>
         <Top>
-          {image && image.imageLink ? (
-            <Logo src={image.imageLink} />
-          ) : (
-            <Logo src={JoinLogo} />
-          )}
+          {thumbnailUrl ? <Logo src={thumbnailUrl} /> : <Logo src={JoinLogo} />}
           <TitleBtnBox>
             <TitleBox>
               {isRecruiting ? (
@@ -59,7 +56,9 @@ const DetailBtn = ({ data }) => {
                   모집 마감
                 </State>
               )}
-              <Name>{name}</Name>
+              <NameWrapper>
+                <Name>{name}</Name>
+              </NameWrapper>
               <Type>{categoryNameKorean}</Type>
             </TitleBox>
             <GoDetailButton>자세히 보기</GoDetailButton>
@@ -129,14 +128,21 @@ const State = styled.div`
   gap: 5px;
 `;
 
-const Name = styled.div`
-  width: auto;
-  height: 35px;
-  font-size: 22px;
-  font-weight: 600;
+const NameWrapper = styled.div`
   display: flex;
   align-items: center;
-  margin-left: 8px;
+`;
+
+const Name = styled.div`
+  width: 130px;
+  height: 27px;
+  font-size: 22px;
+  font-weight: 600;
+  margin: 8px;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const Type = styled.div`

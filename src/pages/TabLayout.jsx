@@ -4,7 +4,6 @@ import styled from "styled-components";
 import ContentHeader from "../components/ContentHeader";
 import ClubsTabBar from "../components/ClubsTabBar";
 import TabBar from "../components/TabBar";
-// import SearchBar from "../components/SearchBar";
 import DetailBtn from "../components/DetailBtn";
 import {
   AxiosCategoryGet,
@@ -19,7 +18,7 @@ const TabLayout = () => {
   const [mainData, setMainData] = useState([]);
   const [categoryData, setCategoryData] = useState({
     clubNames: [],
-    club: { category: {} },
+    clubDetail: {},
   });
   const [isLoading, setIsLoading] = useState(true);
   const [selectedId, setSelectedId] = useState(null);
@@ -36,7 +35,7 @@ const TabLayout = () => {
   const fetchMainData = async () => {
     try {
       const response = await AxiosMainGet();
-      setMainData(response.data.content);
+      setMainData(response.data);
     } catch (error) {
       console.error("메인 데이터 가져오기 오류:", error);
     } finally {
@@ -123,7 +122,6 @@ const TabLayout = () => {
       <Wrapper>
         <ContentHeader length={"26"} />
         <TabBar onTabClick={handleTabClick} />
-        {/* <SearchBar /> */}
         <BtnArea>
           {mainData.map((item, index) => (
             <DetailBtn data={item} key={index} />

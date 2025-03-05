@@ -2,12 +2,7 @@ import Axios from "./Axios";
 
 export const AxiosMainGet = async () => {
   try {
-    const response = await Axios.get("/api/clubs", {
-      params: {
-        page: 0,
-        size: 30,
-      },
-    });
+    const response = await Axios.get("/api/clubs");
     return response.data;
   } catch (error) {
     console.error(error.response?.data?.detail || error.message);
