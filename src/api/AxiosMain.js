@@ -11,6 +11,17 @@ export const AxiosMainGet = async () => {
   }
 };
 
+export const AxiosTotalNumGet = async () => {
+  try {
+    const response = await Axios.get("/api/clubs/count");
+    return response.data.count;
+  } catch (error) {
+    console.error(error.response?.data?.detail || error.message);
+    console.error("데이터 수 안나와");
+    throw error;
+  }
+};
+
 export const AxiosCategoryGet = async (categoryName) => {
   try {
     const response = await Axios.get(`/api/${categoryName}`);

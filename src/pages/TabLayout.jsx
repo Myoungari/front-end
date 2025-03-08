@@ -11,6 +11,7 @@ import {
   AxiosCategoryGet,
   AxiosMainGet,
   AxiosCategoryNDetailGet,
+  AxiosTotalNumGet,
 } from "../api/AxiosMain";
 import Loading from "../components/Loading";
 
@@ -24,8 +25,8 @@ const TabLayout = () => {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [activeClubId, setActiveClubId] = useRecoilState(activeClubIdState);
+  const [totalNum, setTotalNum] = useState(0);
 
-  // `fetchCategoryData`를 useCallback으로 감싸서 의존성 배열에 포함하도록 수정
   const fetchCategoryData = useCallback(
     async (url) => {
       if (url === "/") return;
@@ -34,10 +35,11 @@ const TabLayout = () => {
       const clubId = url.split("/")[2];
 
       try {
+        const TotalNum = await AxiosTotalNumGet();
         const categoryResponse = await AxiosCategoryGet(category);
         const firstClubId = categoryResponse.clubNames[0]?.id;
         const newActiveId = clubId || firstClubId;
-
+        setTotalNum(TotalNum);
         if (newActiveId) {
           const detailResponse = await AxiosCategoryNDetailGet(
             category,
@@ -69,7 +71,7 @@ const TabLayout = () => {
     } else {
       fetchCategoryData(location.pathname);
     }
-  }, [location.pathname, fetchCategoryData]); // ✅ fetchCategoryData를 의존성 배열에 추가
+  }, [location.pathname, fetchCategoryData]);
 
   const fetchMainData = async () => {
     try {
@@ -85,7 +87,7 @@ const TabLayout = () => {
   const handleTabClick = useCallback(
     (url) => {
       navigate(url);
-      setActiveClubId(null); // ✅ TabBar에서 탭 변경 시 activeClubId 초기화 (첫 번째 클럽 선택을 유도)
+      setActiveClubId(null);
     },
     [navigate, setActiveClubId]
   );
@@ -119,12 +121,12 @@ const TabLayout = () => {
         }
       }
     },
-    [location.pathname, navigate, activeClubId, setActiveClubId] // ✅ 의존성 배열에 setActiveClubId 추가
+    [location.pathname, navigate, activeClubId, setActiveClubId]
   );
 
   const renderCategoryContent = () => (
     <Container>
-      <ContentHeader length={"26"} />
+      <ContentHeader length={totalNum} />
       <TabBar onTabClick={handleTabClick} categoryData={categoryData} />
       <ClubsTabBar
         data={categoryData}
@@ -145,7 +147,7 @@ const TabLayout = () => {
             <DetailBtn
               data={item}
               key={index}
-              onClick={() => setActiveClubId(item.id)} // ✅ DetailBtn 클릭 시 activeClubId 설정
+              onClick={() => setActiveClubId(item.id)}
             />
           ))}
         </BtnArea>
