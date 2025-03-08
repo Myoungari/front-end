@@ -2,7 +2,6 @@ import React from "react";
 import { styled } from "styled-components";
 
 const ClubTab = ({ children, onClick, isActive, $recruiteState }) => {
-  console.log(`${children}: ${isActive}`);
   return (
     <Container
       $recruiteState={$recruiteState}

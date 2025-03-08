@@ -33,6 +33,7 @@ const TabContent = () => {
     qualifications,
     introduce,
     activity,
+    clubImageUrls,
   } = clubData;
 
   const startDate = recruitStartDate
@@ -91,6 +92,12 @@ const TabContent = () => {
         <ContentBox>{activity}</ContentBox>
         <ContentTitle>지원조건</ContentTitle>
         <ContentBox>{qualifications}</ContentBox>
+        <ContentTitle>활동 사진</ContentTitle>
+        <ImgArea>
+          {clubImageUrls?.map((data, index) => (
+            <ContentImgBox src={data} key={index} />
+          ))}
+        </ImgArea>
       </ContentArea>
     </Container>
   );
@@ -298,4 +305,25 @@ const ContentBox = styled.div`
     font-size: 14px;
     line-height: 20px;
   }
+`;
+
+const ContentImgBox = styled.img`
+  width: 630px;
+  height: auto;
+  margin-bottom: 30px;
+  border-radius: 12px;
+  @media ${({ theme }) => theme.device.tablet} {
+    width: 594px;
+    font-size: 16px;
+  }
+  @media screen and (max-width: 600px) {
+    width: 100%;
+    min-width: 300px;
+  }
+`;
+
+const ImgArea = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 `;
