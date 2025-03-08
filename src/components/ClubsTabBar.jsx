@@ -1,28 +1,45 @@
-import React from "react";
+import React, { useEffect, useCallback } from "react";
+import { useRecoilState } from "recoil";
+import { activeClubIdState } from "../atoms/activeClubId";
 import { styled } from "styled-components";
 import ClubTab from "./ClubTab";
 
-const ClubsTabBar = ({ data, selectedId, onClubSelect }) => {
+const ClubsTabBar = ({ data, onClubSelect }) => {
+  const [activeClubId, setActiveClubId] = useRecoilState(activeClubIdState);
+  console.log(activeClubId);
+
+  const handleTabClick = useCallback(
+    (clubId) => {
+      if (activeClubId !== clubId) {
+        setActiveClubId(clubId);
+        onClubSelect(clubId);
+      }
+    },
+    [activeClubId, setActiveClubId, onClubSelect]
+  );
+
+  // activeClubId가 변경될 때마다 해당 값에 맞게 렌더링을 다시 하도록 추가
+  useEffect(() => {
+    // useEffect로 activeClubId가 업데이트되면 자동으로 컴포넌트 리렌더링됨
+  }, [activeClubId]); // activeClubId가 변경될 때마다 리렌더링
+
   return (
     <Wrapper>
       <Container>
-        {data.clubNames &&
-          data.clubNames.map((club, index) => {
-            const handleTabClick = () => {
-              onClubSelect(club.id);
-            };
-            const isActive = selectedId === club.id;
-            return (
-              <ClubTab
-                isActive={isActive}
-                $recruiteState={club.recruitmentStatus}
-                onClick={handleTabClick}
-                key={index}
-              >
-                {club.clubName}
-              </ClubTab>
-            );
-          })}
+        {data.clubNames?.map((club) => {
+          const isActive = activeClubId === club.id; // 현재 활성화된 클럽 확인
+
+          return (
+            <ClubTab
+              key={club.id}
+              isActive={isActive}
+              $recruiteState={club.recruitmentStatus}
+              onClick={() => handleTabClick(club.id)}
+            >
+              {club.name}
+            </ClubTab>
+          );
+        })}
       </Container>
     </Wrapper>
   );

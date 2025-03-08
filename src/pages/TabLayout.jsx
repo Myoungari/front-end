@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
+import { useRecoilState } from "recoil";
+import { activeClubIdState } from "../atoms/activeClubId";
 import ContentHeader from "../components/ContentHeader";
 import ClubsTabBar from "../components/ClubsTabBar";
 import TabBar from "../components/TabBar";
@@ -21,7 +23,44 @@ const TabLayout = () => {
     clubDetail: {},
   });
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedId, setSelectedId] = useState(null);
+  const [activeClubId, setActiveClubId] = useRecoilState(activeClubIdState);
+
+  // `fetchCategoryData`를 useCallback으로 감싸서 의존성 배열에 포함하도록 수정
+  const fetchCategoryData = useCallback(
+    async (url) => {
+      if (url === "/") return;
+
+      const category = url.split("/")[1];
+      const clubId = url.split("/")[2];
+
+      try {
+        const categoryResponse = await AxiosCategoryGet(category);
+        const firstClubId = categoryResponse.clubNames[0]?.id;
+        const newActiveId = clubId || firstClubId;
+
+        if (newActiveId) {
+          const detailResponse = await AxiosCategoryNDetailGet(
+            category,
+            newActiveId
+          );
+
+          setCategoryData({
+            ...categoryResponse,
+            clubDetail: detailResponse.clubDetail,
+          });
+
+          setActiveClubId(newActiveId); // ✅ activeClubId 업데이트
+        } else {
+          setCategoryData(categoryResponse);
+        }
+      } catch (error) {
+        console.error("카테고리 데이터 가져오기 오류: ", error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [setActiveClubId]
+  );
 
   useEffect(() => {
     setIsLoading(true);
@@ -30,7 +69,7 @@ const TabLayout = () => {
     } else {
       fetchCategoryData(location.pathname);
     }
-  }, [location.pathname]);
+  }, [location.pathname, fetchCategoryData]); // ✅ fetchCategoryData를 의존성 배열에 추가
 
   const fetchMainData = async () => {
     try {
@@ -43,65 +82,44 @@ const TabLayout = () => {
     }
   };
 
-  const fetchCategoryData = async (url) => {
-    if (url === "/") return;
-
-    const category = url.split("/")[1];
-    const clubId = url.split("/")[2];
-
-    try {
-      const categoryResponse = await AxiosCategoryGet(category);
-      const newSelectedId = clubId || categoryResponse.clubNames[0]?.id;
-
-      if (newSelectedId) {
-        const detailResponse = await AxiosCategoryNDetailGet(
-          category,
-          newSelectedId
-        );
-        setCategoryData({
-          ...categoryResponse,
-          club: detailResponse.club,
-        });
-        setSelectedId(newSelectedId);
-      } else {
-        setCategoryData(categoryResponse);
-      }
-    } catch (error) {
-      console.error("카테고리 데이터 가져오기 오류: ", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleTabClick = useCallback(
     (url) => {
-      const navigateUrl = url !== "/" ? `${url}` : "/";
-      navigate(navigateUrl);
+      navigate(url);
+      setActiveClubId(null); // ✅ TabBar에서 탭 변경 시 activeClubId 초기화 (첫 번째 클럽 선택을 유도)
     },
-    [navigate]
+    [navigate, setActiveClubId]
   );
 
   const handleClubSelect = useCallback(
     async (clubId) => {
-      if (selectedId !== clubId) {
+      console.log("클럽 선택됨 (이전 값):", activeClubId);
+      console.log("새로운 클럽 ID:", clubId);
+
+      if (activeClubId !== clubId) {
         const category = location.pathname.split("/")[1];
+
         try {
           const detailResponse = await AxiosCategoryNDetailGet(
             category,
             clubId
           );
+
           setCategoryData((prevData) => ({
             ...prevData,
-            club: detailResponse.club,
+            clubDetail: detailResponse.clubDetail,
           }));
-          setSelectedId(clubId);
+
+          setActiveClubId(clubId);
+
+          console.log("✅ activeClubId 업데이트 완료:", clubId);
+
           navigate(`/${category}/${clubId}`);
         } catch (error) {
           console.error("클럽 데이터 가져오기 오류:", error);
         }
       }
     },
-    [location.pathname, navigate, selectedId]
+    [location.pathname, navigate, activeClubId, setActiveClubId] // ✅ 의존성 배열에 setActiveClubId 추가
   );
 
   const renderCategoryContent = () => (
@@ -110,7 +128,7 @@ const TabLayout = () => {
       <TabBar onTabClick={handleTabClick} categoryData={categoryData} />
       <ClubsTabBar
         data={categoryData}
-        selectedId={selectedId}
+        activeClubId={activeClubId}
         onClubSelect={handleClubSelect}
       />
       <Outlet context={categoryData} />
@@ -124,7 +142,11 @@ const TabLayout = () => {
         <TabBar onTabClick={handleTabClick} />
         <BtnArea>
           {mainData.map((item, index) => (
-            <DetailBtn data={item} key={index} />
+            <DetailBtn
+              data={item}
+              key={index}
+              onClick={() => setActiveClubId(item.id)} // ✅ DetailBtn 클릭 시 activeClubId 설정
+            />
           ))}
         </BtnArea>
       </Wrapper>
@@ -132,20 +154,12 @@ const TabLayout = () => {
   );
 
   if (isLoading) {
-    return (
-      <>
-        <Loading />
-      </>
-    );
+    return <Loading />;
   }
 
-  return (
-    <>
-      {location.pathname === "/"
-        ? renderMainContent()
-        : renderCategoryContent()}
-    </>
-  );
+  return location.pathname === "/"
+    ? renderMainContent()
+    : renderCategoryContent();
 };
 
 export default TabLayout;

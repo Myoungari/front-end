@@ -2,6 +2,7 @@ import React from "react";
 import { styled } from "styled-components";
 
 const ClubTab = ({ children, onClick, isActive, $recruiteState }) => {
+  console.log(`${children}: ${isActive}`);
   return (
     <Container
       $recruiteState={$recruiteState}
@@ -22,21 +23,22 @@ const Container = styled.div`
   padding: 8px 20px;
   border-radius: 20px;
   border: 1px solid
-    ${({ $recruiteState, $isActive, theme }) =>
+    ${({ $recruiteState, $isActive }) =>
       $recruiteState === "Recruiting" ? "#00D115" : "#FFB4B0"};
   align-items: center;
   justify-content: center;
-  color: ${({ $recruiteState, $isActive, theme }) =>
+  color: ${({ $recruiteState, $isActive }) =>
     $recruiteState === "Recruiting" ? "#00B828" : "#FF544A"};
   background-color: ${({ $recruiteState, $isActive, theme }) =>
-    ($recruiteState === "Recruiting") & $isActive
+    $recruiteState === "Recruiting" && $isActive
       ? theme.colors.Sub50
-      : ($recruiteState === "Recruited") & $isActive
+      : $recruiteState === "Recruited" && $isActive
       ? theme.colors.SubR50
       : theme.colors.WHITE};
   font-size: 18px;
   font-weight: 600;
   white-space: nowrap;
+  cursor: pointer;
 
   @media ${({ theme }) => theme.device.tablet} {
     height: 39px;

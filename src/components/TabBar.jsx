@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
 import { useLocation } from "react-router-dom";
+import { useRecoilState } from "recoil"; // Recoil을 사용하기 위해 import
+import { activeClubIdState } from "../atoms/activeClubId"; // atom import
 import Tab from "./Tab";
 
 const TabBar = ({ onTabClick, categoryData }) => {
@@ -13,19 +15,32 @@ const TabBar = ({ onTabClick, categoryData }) => {
     { name: "인문사회분과", url: "/society" },
     { name: "스포츠레저분과", url: "/sports" },
     { name: "봉사분과", url: "/service" },
+    { name: "예비동아리", url: "/service" },
   ];
 
   const location = useLocation();
   const currentPath = location.pathname;
 
   const [activeTab, setActiveTab] = useState(currentPath);
+  const [activeClubId, setActiveClubId] = useRecoilState(activeClubIdState);
 
   useEffect(() => {
-    setActiveTab(currentPath);
-  }, [currentPath]);
+    // 기존 activeClubId가 있으면 유지하고, 없을 경우에만 업데이트
+    if (!activeClubId || !currentPath.includes(activeClubId)) {
+      setActiveTab(currentPath);
+    }
+  }, [currentPath, activeClubId]);
 
   const handleTabClick = (tabData) => {
-    const clubId = categoryData?.club?.id;
+    const clubId = categoryData?.clubDetail?.id;
+
+    // ✅ clubId가 있으면 유지
+    if (clubId) {
+      setActiveClubId(clubId);
+    }
+
+    // ✅ 클릭한 탭을 active로 설정
+    setActiveTab(tabData.url);
     onTabClick(tabData.url, clubId);
   };
 
@@ -64,8 +79,8 @@ const Wrapper = styled.div`
     display: none;
   }
   & {
-    -ms-overflow-style: none; /* 인터넷 익스플로러 */
-    scrollbar-width: none; /* 파이어폭스 */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 `;
 const Container = styled.div`

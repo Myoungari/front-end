@@ -4,101 +4,95 @@ import moment from "moment";
 import { useOutletContext } from "react-router-dom";
 import JoinLogo from "../assets/images/JoinLogo.svg";
 import Loading from "./Loading";
+
 const TabContent = () => {
   const categoryData = useOutletContext();
-  const [clubData, setClubData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [clubData, setClubData] = useState(categoryData?.clubDetail || null);
 
   useEffect(() => {
-    if (categoryData?.club) {
-      setClubData(categoryData.club);
-      setIsLoading(false);
+    if (categoryData?.clubDetail) {
+      setClubData(categoryData.clubDetail);
     }
-  }, [categoryData]);
+  }, [categoryData]); // clubDetail이 변경될 때 업데이트
 
-  if (isLoading) {
-    return (
-      <>
-        <Loading />
-      </>
-    );
+  if (!clubData) {
+    return <Loading />;
   }
 
   const {
     name,
-    image,
-    president,
+    thumbnailUrl,
+    presidentName,
+    presidentContact,
+    presidentEmail,
     location,
     snsLink,
-    apply = {},
+    applyLink,
+    recruitStartDate,
+    recruitEndDate,
+    qualifications,
     introduce,
     activity,
   } = clubData;
 
-  const startDate = apply.recruitStartDate
-    ? moment(apply.recruitStartDate).format("YYYY.MM.DD")
+  const startDate = recruitStartDate
+    ? moment(recruitStartDate).format("YYYY.MM.DD")
     : "";
-  const endDate = apply.recruitEndDate
-    ? moment(apply.recruitEndDate).format("MM.DD")
-    : "";
+  const endDate = recruitEndDate ? moment(recruitEndDate).format("MM.DD") : "";
   const formedDate =
-    apply.recruitStartDate && apply.recruitEndDate
-      ? `${startDate} - ${endDate}`
-      : "";
+    recruitStartDate && recruitEndDate ? `${startDate} - ${endDate}` : "";
 
   const goApplyLink = () =>
-    apply.applyLink
-      ? (window.location.href = apply.applyLink)
+    applyLink
+      ? (window.location.href = applyLink)
       : alert("지원링크가 존재하지 않습니다 ㅠ.ㅠ");
 
   return (
-    <>
-      <Container>
-        <Header>
-          <HeaderContainer>
-            <ClubName>{name}</ClubName>
-            <ApplyBtn onClick={goApplyLink}>지원하기</ApplyBtn>
-          </HeaderContainer>
-        </Header>
-        <ContentArea>
-          <ProfileWrapper>
-            <ProfileImg src={image?.imageLink || JoinLogo}></ProfileImg>
-            <ProfileBox>
-              <ProfileLineWrapper>
-                <ProfileKeyText>회장: </ProfileKeyText>
-                <ProfileValueText>{president.name}</ProfileValueText>
-              </ProfileLineWrapper>
-              <ProfileLineWrapper>
-                <ProfileKeyText>연락처: </ProfileKeyText>
-                <ProfileValueText>{president.contact}</ProfileValueText>
-              </ProfileLineWrapper>
-              <ProfileLineWrapper>
-                <ProfileKeyText>Email: </ProfileKeyText>
-                <ProfileValueText>{president.email}</ProfileValueText>
-              </ProfileLineWrapper>
-              <ProfileLineWrapper>
-                <ProfileKeyText>위치: </ProfileKeyText>
-                <ProfileValueText>{location}</ProfileValueText>
-              </ProfileLineWrapper>
-              <ProfileLineWrapper>
-                <ProfileKeyText>SNS: </ProfileKeyText>
-                <ProfileValueText>{snsLink}</ProfileValueText>
-              </ProfileLineWrapper>
-              <ProfileLineWrapper>
-                <ProfileKeyText>모집기간: </ProfileKeyText>
-                <ProfileValueText>{formedDate}</ProfileValueText>
-              </ProfileLineWrapper>
-            </ProfileBox>
-          </ProfileWrapper>
-          <ContentTitle>동아리 소개</ContentTitle>
-          <ContentBox>{introduce}</ContentBox>
-          <ContentTitle>활동 내용</ContentTitle>
-          <ContentBox>{activity}</ContentBox>
-          <ContentTitle>지원조건</ContentTitle>
-          <ContentBox>{apply.qualifications}</ContentBox>
-        </ContentArea>
-      </Container>
-    </>
+    <Container>
+      <Header>
+        <HeaderContainer>
+          <ClubName>{name}</ClubName>
+          <ApplyBtn onClick={goApplyLink}>지원하기</ApplyBtn>
+        </HeaderContainer>
+      </Header>
+      <ContentArea>
+        <ProfileWrapper>
+          <ProfileImg src={thumbnailUrl || JoinLogo}></ProfileImg>
+          <ProfileBox>
+            <ProfileLineWrapper>
+              <ProfileKeyText>회장: </ProfileKeyText>
+              <ProfileValueText>{presidentName}</ProfileValueText>
+            </ProfileLineWrapper>
+            <ProfileLineWrapper>
+              <ProfileKeyText>연락처: </ProfileKeyText>
+              <ProfileValueText>{presidentContact}</ProfileValueText>
+            </ProfileLineWrapper>
+            <ProfileLineWrapper>
+              <ProfileKeyText>Email: </ProfileKeyText>
+              <ProfileValueText>{presidentEmail}</ProfileValueText>
+            </ProfileLineWrapper>
+            <ProfileLineWrapper>
+              <ProfileKeyText>위치: </ProfileKeyText>
+              <ProfileValueText>{location}</ProfileValueText>
+            </ProfileLineWrapper>
+            <ProfileLineWrapper>
+              <ProfileKeyText>SNS: </ProfileKeyText>
+              <ProfileValueText>{snsLink}</ProfileValueText>
+            </ProfileLineWrapper>
+            <ProfileLineWrapper>
+              <ProfileKeyText>모집기간: </ProfileKeyText>
+              <ProfileValueText>{formedDate}</ProfileValueText>
+            </ProfileLineWrapper>
+          </ProfileBox>
+        </ProfileWrapper>
+        <ContentTitle>동아리 소개</ContentTitle>
+        <ContentBox>{introduce}</ContentBox>
+        <ContentTitle>활동 내용</ContentTitle>
+        <ContentBox>{activity}</ContentBox>
+        <ContentTitle>지원조건</ContentTitle>
+        <ContentBox>{qualifications}</ContentBox>
+      </ContentArea>
+    </Container>
   );
 };
 
