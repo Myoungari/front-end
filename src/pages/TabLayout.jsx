@@ -76,6 +76,8 @@ const TabLayout = () => {
   const fetchMainData = async () => {
     try {
       const response = await AxiosMainGet();
+      const TotalNum = await AxiosTotalNumGet();
+      setTotalNum(TotalNum);
       setMainData(response.data);
     } catch (error) {
       console.error("메인 데이터 가져오기 오류:", error);
@@ -140,7 +142,7 @@ const TabLayout = () => {
   const renderMainContent = () => (
     <Container>
       <Wrapper>
-        <ContentHeader length={"26"} />
+        <ContentHeader length={totalNum} />
         <TabBar onTabClick={handleTabClick} />
         <BtnArea>
           {mainData.map((item, index) => (
