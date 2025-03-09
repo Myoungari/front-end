@@ -21,8 +21,11 @@ export default Loading;
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 50vh;
+  height: calc(100vh - 105px);
   display: flex;
   justify-content: center;
   align-items: center;
+  @media ${({ theme }) => theme.device.mobile} {
+    height: calc(100vh - 75px);
+  }
 `;

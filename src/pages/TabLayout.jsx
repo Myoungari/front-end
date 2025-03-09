@@ -1,15 +1,17 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
+import { useRecoilState } from "recoil";
+import { activeClubIdState } from "../atoms/activeClubId";
 import ContentHeader from "../components/ContentHeader";
 import ClubsTabBar from "../components/ClubsTabBar";
 import TabBar from "../components/TabBar";
-// import SearchBar from "../components/SearchBar";
 import DetailBtn from "../components/DetailBtn";
 import {
   AxiosCategoryGet,
   AxiosMainGet,
   AxiosCategoryNDetailGet,
+  AxiosTotalNumGet,
 } from "../api/AxiosMain";
 import Loading from "../components/Loading";
 
@@ -18,11 +20,68 @@ const TabLayout = () => {
   const location = useLocation();
   const [mainData, setMainData] = useState([]);
   const [categoryData, setCategoryData] = useState({
-    clubNames: [],
-    club: { category: {} },
+    clubNames: null,
+    clubDetail: null,
   });
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedId, setSelectedId] = useState(null);
+  const [activeClubId, setActiveClubId] = useRecoilState(activeClubIdState);
+  const [totalNum, setTotalNum] = useState(0);
+
+  const fetchCategoryData = useCallback(
+    async (url) => {
+      if (url === "/") return;
+
+      const category = url.split("/")[1];
+      const clubId = url.split("/")[2];
+
+      try {
+        const TotalNum = await AxiosTotalNumGet();
+        const categoryResponse = await AxiosCategoryGet(category);
+        setTotalNum(TotalNum);
+
+        // clubNames가 null이거나 빈 배열인 경우 처리
+        if (
+          !categoryResponse.clubNames ||
+          categoryResponse.clubNames.length === 0
+        ) {
+          setCategoryData(categoryResponse);
+          setActiveClubId(null);
+          setIsLoading(false);
+          return;
+        }
+
+        const firstClubId = categoryResponse.clubNames[0]?.id;
+        const newActiveId = clubId || firstClubId;
+
+        if (newActiveId) {
+          try {
+            const detailResponse = await AxiosCategoryNDetailGet(
+              category,
+              newActiveId
+            );
+
+            setCategoryData({
+              ...categoryResponse,
+              clubDetail: detailResponse.clubDetail,
+            });
+
+            setActiveClubId(newActiveId);
+          } catch (detailError) {
+            console.error("클럽 상세 데이터 가져오기 오류:", detailError);
+            setCategoryData(categoryResponse);
+          }
+        } else {
+          setCategoryData(categoryResponse);
+        }
+      } catch (error) {
+        console.error("카테고리 데이터 가져오기 오류: ", error);
+        setCategoryData({ clubNames: null, clubDetail: null });
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [setActiveClubId]
+  );
 
   useEffect(() => {
     setIsLoading(true);
@@ -31,12 +90,14 @@ const TabLayout = () => {
     } else {
       fetchCategoryData(location.pathname);
     }
-  }, [location.pathname]);
+  }, [location.pathname, fetchCategoryData]);
 
   const fetchMainData = async () => {
     try {
       const response = await AxiosMainGet();
-      setMainData(response.data.content);
+      const TotalNum = await AxiosTotalNumGet();
+      setTotalNum(TotalNum);
+      setMainData(response.data);
     } catch (error) {
       console.error("메인 데이터 가져오기 오류:", error);
     } finally {
@@ -44,76 +105,57 @@ const TabLayout = () => {
     }
   };
 
-  const fetchCategoryData = async (url) => {
-    if (url === "/") return;
-
-    const category = url.split("/")[1];
-    const clubId = url.split("/")[2];
-
-    try {
-      const categoryResponse = await AxiosCategoryGet(category);
-      const newSelectedId = clubId || categoryResponse.clubNames[0]?.id;
-
-      if (newSelectedId) {
-        const detailResponse = await AxiosCategoryNDetailGet(
-          category,
-          newSelectedId
-        );
-        setCategoryData({
-          ...categoryResponse,
-          club: detailResponse.club,
-        });
-        setSelectedId(newSelectedId);
-      } else {
-        setCategoryData(categoryResponse);
-      }
-    } catch (error) {
-      console.error("카테고리 데이터 가져오기 오류: ", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleTabClick = useCallback(
     (url) => {
-      const navigateUrl = url !== "/" ? `${url}` : "/";
-      navigate(navigateUrl);
+      navigate(url);
+      setActiveClubId(null);
     },
-    [navigate]
+    [navigate, setActiveClubId]
   );
 
   const handleClubSelect = useCallback(
     async (clubId) => {
-      if (selectedId !== clubId) {
+      console.log("클럽 선택됨 (이전 값):", activeClubId);
+      console.log("새로운 클럽 ID:", clubId);
+
+      if (activeClubId !== clubId) {
         const category = location.pathname.split("/")[1];
+
         try {
           const detailResponse = await AxiosCategoryNDetailGet(
             category,
             clubId
           );
+
           setCategoryData((prevData) => ({
             ...prevData,
-            club: detailResponse.club,
+            clubDetail: detailResponse.clubDetail,
           }));
-          setSelectedId(clubId);
+
+          setActiveClubId(clubId);
+
+          console.log("activeClubId 업데이트 완료:", clubId);
+
           navigate(`/${category}/${clubId}`);
         } catch (error) {
           console.error("클럽 데이터 가져오기 오류:", error);
         }
       }
     },
-    [location.pathname, navigate, selectedId]
+    [location.pathname, navigate, activeClubId, setActiveClubId]
   );
 
   const renderCategoryContent = () => (
     <Container>
-      <ContentHeader length={"26"} />
+      <ContentHeader length={totalNum} />
       <TabBar onTabClick={handleTabClick} categoryData={categoryData} />
-      <ClubsTabBar
-        data={categoryData}
-        selectedId={selectedId}
-        onClubSelect={handleClubSelect}
-      />
+      {categoryData.clubNames && categoryData.clubNames.length > 0 ? (
+        <ClubsTabBar
+          data={categoryData}
+          activeClubId={activeClubId}
+          onClubSelect={handleClubSelect}
+        />
+      ) : null}
       <Outlet context={categoryData} />
     </Container>
   );
@@ -121,12 +163,15 @@ const TabLayout = () => {
   const renderMainContent = () => (
     <Container>
       <Wrapper>
-        <ContentHeader length={"26"} />
+        <ContentHeader length={totalNum} />
         <TabBar onTabClick={handleTabClick} />
-        {/* <SearchBar /> */}
         <BtnArea>
           {mainData.map((item, index) => (
-            <DetailBtn data={item} key={index} />
+            <DetailBtn
+              data={item}
+              key={index}
+              onClick={() => setActiveClubId(item.id)}
+            />
           ))}
         </BtnArea>
       </Wrapper>
@@ -134,20 +179,12 @@ const TabLayout = () => {
   );
 
   if (isLoading) {
-    return (
-      <>
-        <Loading />
-      </>
-    );
+    return <Loading />;
   }
 
-  return (
-    <>
-      {location.pathname === "/"
-        ? renderMainContent()
-        : renderCategoryContent()}
-    </>
-  );
+  return location.pathname === "/"
+    ? renderMainContent()
+    : renderCategoryContent();
 };
 
 export default TabLayout;

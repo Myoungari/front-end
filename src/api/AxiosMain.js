@@ -2,16 +2,22 @@ import Axios from "./Axios";
 
 export const AxiosMainGet = async () => {
   try {
-    const response = await Axios.get("/api/clubs", {
-      params: {
-        page: 0,
-        size: 30,
-      },
-    });
+    const response = await Axios.get("/api/clubs");
     return response.data;
   } catch (error) {
     console.error(error.response?.data?.detail || error.message);
     console.error("전체 안나왕");
+    throw error;
+  }
+};
+
+export const AxiosTotalNumGet = async () => {
+  try {
+    const response = await Axios.get("/api/clubs/count");
+    return response.data.count;
+  } catch (error) {
+    console.error(error.response?.data?.detail || error.message);
+    console.error("데이터 수 안나와");
     throw error;
   }
 };
