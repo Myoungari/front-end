@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { ReactComponent as GreenCircle } from "../assets/images/StateCircleGreen.svg";
 import { ReactComponent as RedCircle } from "../assets/images/StateCircleRed.svg";
-import JoinLogo from "../assets/images/JoinLogo.svg";
+import MJULogo from "../assets/images/MJULogo.svg";
 
 const DetailBtn = ({ data }) => {
   const { categoryName, id, recruitmentStatus, thumbnailUrl, name, introduce } =
@@ -42,7 +42,7 @@ const DetailBtn = ({ data }) => {
     <>
       <Container onClick={handleGoDetail}>
         <Top>
-          {thumbnailUrl ? <Logo src={thumbnailUrl} /> : <Logo src={JoinLogo} />}
+          {thumbnailUrl ? <Logo src={thumbnailUrl} /> : <Logo src={MJULogo} />}
           <TitleBtnBox>
             <TitleBox>
               {isRecruiting ? (

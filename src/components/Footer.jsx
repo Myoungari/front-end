@@ -1,11 +1,11 @@
 import React from "react";
 import { styled } from "styled-components";
-import { ReactComponent as Logo } from "../assets/images/JoinLogo.svg";
+import { ReactComponent as Logo } from "../assets/images/MJULogo.svg";
 import { ReactComponent as InstaLogo } from "../assets/images/InstaLogo.svg";
 
 const Footer = () => {
   const goInsta = () =>
-    (window.location.href = "https://www.instagram.com/mju_join");
+    (window.location.href = "https://www.instagram.com/mju_wave");
   return (
     <>
       <Container>
@@ -14,10 +14,10 @@ const Footer = () => {
             <LogoImg />
           </LogoBox>
           <TextBox>
-            <Title>명지대학교 제 40대 총동아리연합회 Join</Title>
+            <Title>명지대학교 제 41대 총동아리연합회 WAVE</Title>
             <Address>
               17058 경기도 용인시 처인구 명지로 116 (남동, 명지대학교용인캠퍼스)
-              , 학관 101호
+              , 학관 411호
             </Address>
             <BottomRowBox>
               <MadeBox>
@@ -74,6 +74,8 @@ const LogoBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  background-size: cover;
+
   @media ${({ theme }) => theme.device.tablet} {
     width: 45px;
     height: 45px;
@@ -83,6 +85,8 @@ const LogoBox = styled.div`
 const LogoImg = styled(Logo)`
   width: 45px;
   height: 45px;
+  border-radius: 100%;
+
   @media ${({ theme }) => theme.device.tablet} {
     width: 40px;
     height: 40px;
