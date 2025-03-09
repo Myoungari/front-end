@@ -15,7 +15,7 @@ const TabBar = ({ onTabClick, categoryData }) => {
     { name: "인문사회분과", url: "/society" },
     { name: "스포츠레저분과", url: "/sports" },
     { name: "봉사분과", url: "/service" },
-    { name: "예비동아리", url: "/service" },
+    { name: "예비동아리", url: "/preliminary" },
   ];
 
   const location = useLocation();
@@ -25,7 +25,6 @@ const TabBar = ({ onTabClick, categoryData }) => {
   const [activeClubId, setActiveClubId] = useRecoilState(activeClubIdState);
 
   useEffect(() => {
-    // 기존 activeClubId가 있으면 유지하고, 없을 경우에만 업데이트
     if (!activeClubId || !currentPath.includes(activeClubId)) {
       setActiveTab(currentPath);
     }
@@ -34,12 +33,6 @@ const TabBar = ({ onTabClick, categoryData }) => {
   const handleTabClick = (tabData) => {
     const clubId = categoryData?.clubDetail?.id;
 
-    // ✅ clubId가 있으면 유지
-    if (clubId) {
-      setActiveClubId(clubId);
-    }
-
-    // ✅ 클릭한 탭을 active로 설정
     setActiveTab(tabData.url);
     onTabClick(tabData.url, clubId);
   };

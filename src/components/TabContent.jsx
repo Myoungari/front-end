@@ -6,15 +6,30 @@ import JoinLogo from "../assets/images/JoinLogo.svg";
 import Loading from "./Loading";
 
 const TabContent = () => {
-  const categoryData = useOutletContext();
+  const categoryData = useOutletContext() || {
+    clubNames: [],
+    clubDetail: null,
+  };
   const [clubData, setClubData] = useState(categoryData?.clubDetail || null);
 
   useEffect(() => {
     if (categoryData?.clubDetail) {
       setClubData(categoryData.clubDetail);
     }
-  }, [categoryData]); // clubDetail이 변경될 때 업데이트
+  }, [categoryData.clubDetail]);
 
+  if (!categoryData.clubNames || categoryData.clubNames.length === 0) {
+    return (
+      <Container>
+        <Header></Header>
+        <BlankContentArea>
+          <ContentTitle>
+            이 카테고리는 동아리가 존재하지 않습니다 ㅠ.ㅠ
+          </ContentTitle>
+        </BlankContentArea>
+      </Container>
+    );
+  }
   if (!clubData) {
     return <Loading />;
   }
@@ -197,6 +212,18 @@ const ContentArea = styled.div`
   align-items: center;
 `;
 
+const BlankContentArea = styled.div`
+  width: 100%;
+  height: calc(100vh - 665px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @media ${({ theme }) => theme.device.mobile} {
+    padding-top: 40px;
+    height: calc(100vh - 575px);
+  }
+`;
+
 const ProfileWrapper = styled.div`
   display: flex;
   gap: 24px;
@@ -281,6 +308,7 @@ const ContentTitle = styled.div`
   color: ${({ theme }) => theme.colors.Primary300};
   margin-bottom: 10px;
 `;
+
 const ContentBox = styled.div`
   width: 630px;
   height: auto;

@@ -20,8 +20,8 @@ const TabLayout = () => {
   const location = useLocation();
   const [mainData, setMainData] = useState([]);
   const [categoryData, setCategoryData] = useState({
-    clubNames: [],
-    clubDetail: {},
+    clubNames: null,
+    clubDetail: null,
   });
   const [isLoading, setIsLoading] = useState(true);
   const [activeClubId, setActiveClubId] = useRecoilState(activeClubIdState);
@@ -37,26 +37,45 @@ const TabLayout = () => {
       try {
         const TotalNum = await AxiosTotalNumGet();
         const categoryResponse = await AxiosCategoryGet(category);
+        setTotalNum(TotalNum);
+
+        // clubNames가 null이거나 빈 배열인 경우 처리
+        if (
+          !categoryResponse.clubNames ||
+          categoryResponse.clubNames.length === 0
+        ) {
+          setCategoryData(categoryResponse);
+          setActiveClubId(null);
+          setIsLoading(false);
+          return;
+        }
+
         const firstClubId = categoryResponse.clubNames[0]?.id;
         const newActiveId = clubId || firstClubId;
-        setTotalNum(TotalNum);
+
         if (newActiveId) {
-          const detailResponse = await AxiosCategoryNDetailGet(
-            category,
-            newActiveId
-          );
+          try {
+            const detailResponse = await AxiosCategoryNDetailGet(
+              category,
+              newActiveId
+            );
 
-          setCategoryData({
-            ...categoryResponse,
-            clubDetail: detailResponse.clubDetail,
-          });
+            setCategoryData({
+              ...categoryResponse,
+              clubDetail: detailResponse.clubDetail,
+            });
 
-          setActiveClubId(newActiveId); // ✅ activeClubId 업데이트
+            setActiveClubId(newActiveId);
+          } catch (detailError) {
+            console.error("클럽 상세 데이터 가져오기 오류:", detailError);
+            setCategoryData(categoryResponse);
+          }
         } else {
           setCategoryData(categoryResponse);
         }
       } catch (error) {
         console.error("카테고리 데이터 가져오기 오류: ", error);
+        setCategoryData({ clubNames: null, clubDetail: null });
       } finally {
         setIsLoading(false);
       }
@@ -115,7 +134,7 @@ const TabLayout = () => {
 
           setActiveClubId(clubId);
 
-          console.log("✅ activeClubId 업데이트 완료:", clubId);
+          console.log("activeClubId 업데이트 완료:", clubId);
 
           navigate(`/${category}/${clubId}`);
         } catch (error) {
@@ -130,11 +149,13 @@ const TabLayout = () => {
     <Container>
       <ContentHeader length={totalNum} />
       <TabBar onTabClick={handleTabClick} categoryData={categoryData} />
-      <ClubsTabBar
-        data={categoryData}
-        activeClubId={activeClubId}
-        onClubSelect={handleClubSelect}
-      />
+      {categoryData.clubNames && categoryData.clubNames.length > 0 ? (
+        <ClubsTabBar
+          data={categoryData}
+          activeClubId={activeClubId}
+          onClubSelect={handleClubSelect}
+        />
+      ) : null}
       <Outlet context={categoryData} />
     </Container>
   );
