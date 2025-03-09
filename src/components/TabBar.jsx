@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
 import { useLocation } from "react-router-dom";
-import { useRecoilState } from "recoil"; // Recoil을 사용하기 위해 import
-import { activeClubIdState } from "../atoms/activeClubId"; // atom import
+import { useRecoilState } from "recoil";
+import { activeClubIdState } from "../atoms/activeClubId";
 import Tab from "./Tab";
 
 const TabBar = ({ onTabClick, categoryData }) => {
@@ -22,7 +22,7 @@ const TabBar = ({ onTabClick, categoryData }) => {
   const currentPath = location.pathname;
 
   const [activeTab, setActiveTab] = useState(currentPath);
-  const [activeClubId, setActiveClubId] = useRecoilState(activeClubIdState);
+  const [activeClubId] = useRecoilState(activeClubIdState);
 
   useEffect(() => {
     if (!activeClubId || !currentPath.includes(activeClubId)) {

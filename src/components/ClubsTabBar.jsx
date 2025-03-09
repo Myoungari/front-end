@@ -6,7 +6,6 @@ import ClubTab from "./ClubTab";
 
 const ClubsTabBar = ({ data, onClubSelect }) => {
   const [activeClubId, setActiveClubId] = useRecoilState(activeClubIdState);
-  console.log(activeClubId);
 
   const handleTabClick = useCallback(
     (clubId) => {
@@ -18,16 +17,13 @@ const ClubsTabBar = ({ data, onClubSelect }) => {
     [activeClubId, setActiveClubId, onClubSelect]
   );
 
-  // activeClubId가 변경될 때마다 해당 값에 맞게 렌더링을 다시 하도록 추가
-  useEffect(() => {
-    // useEffect로 activeClubId가 업데이트되면 자동으로 컴포넌트 리렌더링됨
-  }, [activeClubId]); // activeClubId가 변경될 때마다 리렌더링
+  useEffect(() => {}, [activeClubId]);
 
   return (
     <Wrapper>
       <Container>
         {data.clubNames?.map((club) => {
-          const isActive = activeClubId === club.id; // 현재 활성화된 클럽 확인
+          const isActive = activeClubId === club.id;
 
           return (
             <ClubTab

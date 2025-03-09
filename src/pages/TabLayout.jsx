@@ -115,9 +115,6 @@ const TabLayout = () => {
 
   const handleClubSelect = useCallback(
     async (clubId) => {
-      console.log("클럽 선택됨 (이전 값):", activeClubId);
-      console.log("새로운 클럽 ID:", clubId);
-
       if (activeClubId !== clubId) {
         const category = location.pathname.split("/")[1];
 
@@ -133,8 +130,6 @@ const TabLayout = () => {
           }));
 
           setActiveClubId(clubId);
-
-          console.log("activeClubId 업데이트 완료:", clubId);
 
           navigate(`/${category}/${clubId}`);
         } catch (error) {
