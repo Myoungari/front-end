@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
 import moment from "moment";
 import { useOutletContext } from "react-router-dom";
-import JoinLogo from "../assets/images/JoinLogo.svg";
+import MJULogo from "../assets/images/MJULogo.svg";
 import Loading from "./Loading";
 
 const TabContent = () => {
@@ -73,7 +73,7 @@ const TabContent = () => {
       </Header>
       <ContentArea>
         <ProfileWrapper>
-          <ProfileImg src={thumbnailUrl || JoinLogo}></ProfileImg>
+          <ProfileImg src={thumbnailUrl || MJULogo}></ProfileImg>
           <ProfileBox>
             <ProfileLineWrapper>
               <ProfileKeyText>회장: </ProfileKeyText>
