@@ -50,6 +50,8 @@ const TabContent = () => {
     introduce,
     activity,
     clubImageUrls,
+    recruitmentStatus,
+    recruitment_method,
   } = clubData;
 
   const startDate = recruitStartDate
@@ -60,9 +62,11 @@ const TabContent = () => {
     recruitStartDate && recruitEndDate ? `${startDate} - ${endDate}` : "";
 
   const goApplyLink = () =>
-    applyLink
-      ? (window.location.href = applyLink)
-      : alert("지원링크가 존재하지 않습니다 ㅠ.ㅠ");
+    recruitmentStatus === "Recruiting"
+      ? applyLink
+        ? (window.location.href = applyLink)
+        : alert("지원링크가 존재하지 않습니다 ㅠ.ㅠ")
+      : alert("모집 기간이 아닙니다 ㅠ.ㅠ");
 
   return (
     <Container>
@@ -99,6 +103,10 @@ const TabContent = () => {
             <ProfileLineWrapper>
               <ProfileKeyText>모집기간: </ProfileKeyText>
               <ProfileValueText>{formedDate}</ProfileValueText>
+            </ProfileLineWrapper>
+            <ProfileLineWrapper>
+              <ProfileKeyText>모집방식: </ProfileKeyText>
+              <ProfileValueText>{recruitment_method}</ProfileValueText>
             </ProfileLineWrapper>
           </ProfileBox>
         </ProfileWrapper>
