@@ -30,6 +30,7 @@ const TabContent = () => {
       </Container>
     );
   }
+
   if (!clubData) {
     return <Loading />;
   }
@@ -292,7 +293,7 @@ const ProfileValueText = styled.p`
   font-weight: 600;
   color: ${({ theme }) => theme.colors.BLACK};
   word-wrap: break-word;
-  white-space: normal;
+  white-space: pre-line;
 
   @media ${({ theme }) => theme.device.tablet} {
     font-size: 16px;
@@ -322,6 +323,7 @@ const ContentBox = styled.div`
   font-weight: 400;
   font-size: 18px;
   line-height: 24px;
+  white-space: pre-line;
   @media ${({ theme }) => theme.device.tablet} {
     width: 594px;
     font-size: 16px;
