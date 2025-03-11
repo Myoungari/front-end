@@ -23,9 +23,7 @@ const TabContent = () => {
       <Container>
         <Header></Header>
         <BlankContentArea>
-          <ContentTitle>
-            이 카테고리는 동아리가 존재하지 않습니다 ㅠ.ㅠ
-          </ContentTitle>
+          <ContentTitle>동아리가 존재하지 않습니다 ㅠ.ㅠ</ContentTitle>
         </BlankContentArea>
       </Container>
     );
