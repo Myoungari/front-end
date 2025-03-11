@@ -51,7 +51,7 @@ const TabContent = () => {
     activity,
     clubImageUrls,
     recruitmentStatus,
-    recruitment_method,
+    recruitmentMethod,
   } = clubData;
 
   const startDate = recruitStartDate
@@ -106,7 +106,7 @@ const TabContent = () => {
             </ProfileLineWrapper>
             <ProfileLineWrapper>
               <ProfileKeyText>모집방식: </ProfileKeyText>
-              <ProfileValueText>{recruitment_method}</ProfileValueText>
+              <ProfileValueText>{recruitmentMethod}</ProfileValueText>
             </ProfileLineWrapper>
           </ProfileBox>
         </ProfileWrapper>
