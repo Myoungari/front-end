@@ -27,6 +27,8 @@ const DetailBtn = ({ data }) => {
         return "평면예술분과";
       case "society":
         return "사회분과";
+      case "preliminary":
+        return "예비동아리";
       default:
         return "error";
     }

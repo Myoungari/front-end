@@ -21,8 +21,9 @@ const Footer = () => {
             </Address>
             <BottomRowBox>
               <MadeBox>
-                <MadeBy>Developed by 김효리, 박상혁</MadeBy>
-                <MadeBy>Designed by 김고은, 김사랑 </MadeBy>
+                <MadeBy>
+                  Developed by 정보통신공학전공 김효리, 박상혁, 김고은
+                </MadeBy>
               </MadeBox>
 
               <InstagramBtn onClick={goInsta}>

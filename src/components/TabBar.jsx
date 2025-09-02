@@ -9,7 +9,7 @@ const TabBar = ({ onTabClick, categoryData }) => {
   const categories = [
     { name: "전체", url: "/" },
     { name: "평면예술분과", url: "/flatart" },
-    { name: "언행예술분과", url: "/behavior" },
+    { name: "연행예술분과", url: "/behavior" },
     { name: "종교분과", url: "/religion" },
     { name: "과학분과", url: "/science" },
     { name: "인문사회분과", url: "/society" },
